@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Winery List</title>
+</head>
+<body>
+
+<h2>Wineries</h2>
+<form th:action="@{/wine/home}" method="get">
+    <label for="city">Enter city:</label>
+    <input type="text" id="city" name="city">
+    <label for="name">Enter name:</label>
+    <input type="text" id="name" name="name" >
+    <label for="sortByRating">Sort by Rating:</label>
+    <input type="checkbox" id="sortByRating" name="sortByRating" />
+    <button type="submit">Search</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Mobile Phone</th>
+        <th>Additional Phone</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Email</th>
+        <th>Website</th>
+        <th>Yellow Pages Link</th>
+        <th>Catalog Link</th>
+        <th>Facebook Link</th>
+        <th>Instagram Link</th>
+        <th>Logo URL</th>
+        <th>Rating</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="winery : ${wineries}">
+        <td th:text="${winery.id}"></td>
+        <td>
+            <a th:href="@{/wine/winery-details/{id}(id=${winery.id})}">
+                <button type="button" style="cursor: pointer; border: none; background-color: white; color: black;">
+                    <span th:text="${winery.name}"></span>
+                </button>
+            </a>
+        </td>
+        <td th:text="${winery.mobile_phone}"></td>
+        <td th:text="${winery.additional_phone}"></td>
+        <td th:text="${winery.address}"></td>
+        <td th:text="${winery.city}"></td>
+        <td th:text="${winery.email}"></td>
+        <td th:text="${winery.website}"></td>
+        <td th:text="${winery.yellowpages_link}"></td>
+        <td th:text="${winery.catalog_link}"></td>
+        <td th:text="${winery.facebook_link}"></td>
+        <td th:text="${winery.instagram_link}"></td>
+        <td th:text="${winery.logo_url}"></td>
+        <td th:text="${winery.rating}"></td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></body>
+</html>
