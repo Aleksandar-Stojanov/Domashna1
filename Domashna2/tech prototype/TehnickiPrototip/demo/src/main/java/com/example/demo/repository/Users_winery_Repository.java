@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 import com.example.demo.model.Users_winery;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,7 @@ public interface Users_winery_Repository extends JpaRepository<Users_winery, Lon
     @Modifying
     @Query(value = "INSERT INTO Users_winery (username,name, surname, password, date_of_birth, email) " +
             "VALUES (:username, :name, :surname, :password, :dateOfBirth, :email) ", nativeQuery = true)
+    @Transactional
     void saveuser(@Param("username") String username,
                   @Param("name") String name,
                   @Param("surname") String surname,
@@ -21,4 +23,5 @@ public interface Users_winery_Repository extends JpaRepository<Users_winery, Lon
                   @Param("email") String email);
     Users_winery findByUsername(String username);
     Optional<Users_winery> findById(Long id);
+
 }
