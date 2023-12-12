@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -50,5 +52,12 @@ public class winery implements Serializable {
         this.instagram_link = instagram_link;
         this.logo_url = logo_url;
         this.rating = rating;
+    }
+
+    @ElementCollection
+    private List<Float> ratings;
+
+    public Collection<Float> getRatings() {
+        return ratings;
     }
 }
