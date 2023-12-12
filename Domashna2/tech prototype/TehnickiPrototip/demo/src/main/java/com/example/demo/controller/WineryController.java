@@ -39,7 +39,7 @@ public String showAllWineries(
     if (city != null && !city.isEmpty() && name != null && !name.isEmpty()) {
         wineries = wineryService.findByCityIgnoreCaseAndNameIgnoreCase(city, name);
 
-    } else if (city != null && !city.isEmpty()) {
+    } else if (city == null && !city.isEmpty()) {
         wineries = wineryService.findByCityIgnoreCase(city);
 
     } else if (name != null && !name.isEmpty()) {

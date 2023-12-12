@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<h2 th:text="${winery.name}"></h2>
+<h2 th:text="${winery.name}" data-winery-id="${winery.id}"></h2>
 
 <div>Address: <td th:text="${winery.address}"></td></div>
 <div>City: <td th:text="${winery.city}"></td></div>
@@ -24,6 +24,59 @@
 <div>Catalog link: <td th:text="${winery.catalog_link}"></td></div>
 <div>Logo URL: <td th:text="${winery.logo_url}"></td></div>
 <div>Rating: <td th:text="${winery.rating}"></td></div>
+
+<h3>Rating:</h3>
+<div id="rating" data-rateyo-rating="{{winery.rating}}"></div>
+<div>
+    <div id="star-icons">
+        <!-- Unicode star characters for the user to choose their rating -->
+        <span onclick="setRating(1)">&#9733;</span>
+        <span onclick="setRating(2)">&#9733;</span>
+        <span onclick="setRating(3)">&#9733;</span>
+        <span onclick="setRating(4)">&#9733;</span>
+        <span onclick="setRating(5)">&#9733;</span>
+    </div>
+    <button id="submitRating" onclick="submitRating()">Submit Rating</button>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.js"></script>
+<script>
+    // Retrieve the wineryId from the data attribute
+    var wineryId = $("#rating").data("winery-id");
+
+    $(function () {
+        var ratingElement = $("#rating");
+        var submitButton = $("#submitRating");
+
+        ratingElement.rateYo({
+            starWidth: "20px",
+            readOnly: false, // Set to false if you want users to be able to rate
+            rating: ratingElement.data("rateyo-rating"),
+            onChange: function (rating, rateYoInstance) {
+                // Display the selected rating dynamically (optional)
+                // You can customize this part based on your UI requirements
+                console.log("Selected Rating: " + rating);
+            }
+        });
+
+        submitButton.on("click", function () {
+            var selectedRating = ratingElement.rateYo("rating");
+
+            $.ajax({
+                type: "POST",
+                url: "/rating/submit",
+                data: { wineryId: wineryId, rating: selectedRating },
+                success: function (response) {
+                    alert(response); // Display success message
+                    // You may want to refresh the page or update the UI based on the response
+                },
+                error: function (error) {
+                    alert("Error submitting rating: " + error.responseText);
+                }
+            });
+        });
+    });
+</script>
 
 <br>
 <a th:href="@{/wine/home}">Back to Winery List</a>
