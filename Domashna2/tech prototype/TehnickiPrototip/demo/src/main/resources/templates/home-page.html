@@ -12,7 +12,7 @@
     <p>Logged in as: <span th:text="${user.name}"></span> <span th:text="${user.surname}"></span></p>
     <a th:href="@{/logout}">Log out</a>
 </div>
-<div th:unless="${user != null}">
+<div th:if="${user == null}">
     <a th:href="@{/login}">Login</a>
 </div>
 <h2>Wineries</h2>

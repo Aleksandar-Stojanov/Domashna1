@@ -24,8 +24,8 @@ public class LoginController {
     // Display the login form
     @GetMapping("/login")
     public String showLoginForm( HttpServletRequest request) {
-        if(Optional.ofNullable(request.getSession().getAttribute("user")).isPresent())
-            return "redirect:/wine/home";
+        if(Optional.ofNullable(request.getSession().getAttribute("user")).isPresent()){
+            return "redirect:/wine/home";}
         return "login";
     }
     // Process the login form submission
@@ -36,7 +36,7 @@ public class LoginController {
                                Model model) {
         Users_winery user = null;
         user = usersWineryRepository.findByUsernameAndPassword(username,password);
-        if (user !=null) {
+        if (user != null) {
             request.getSession().setAttribute("user", user);
             return "redirect:/wine/home";
         } else {

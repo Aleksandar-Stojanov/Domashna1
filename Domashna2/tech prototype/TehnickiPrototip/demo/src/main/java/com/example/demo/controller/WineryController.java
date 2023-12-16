@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.PipeAndFilter.*;
 import com.example.demo.model.winery;
 import com.example.demo.services.WineryService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,7 @@ public class WineryController {
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String sortByRating,
+            HttpServletRequest request,
             Model model
     ) throws IOException {
 
@@ -63,8 +65,8 @@ public class WineryController {
             com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
             transformedWineries.add(transformedWinery);
         }
-
-        model.addAttribute("wineries", transformedWineries);  // Use the transformed list for display
+        model.addAttribute("user",request.getSession().getAttribute("user"));
+        model.addAttribute("wineries", transformedWineries);
         return "home-page";
     }
 
