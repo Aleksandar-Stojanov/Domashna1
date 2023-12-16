@@ -24,57 +24,50 @@ public class WineryController {
         this.wineryService = wineryService;
     }
 
+    @GetMapping("/home")
+    public String showAllWineries(
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String sortByRating,
+            Model model
+    ) throws IOException {
 
-@GetMapping("/home")
-public String showAllWineries(
-        @RequestParam(required = false) String city,
-        @RequestParam(required = false) String name,
-        @RequestParam(required = false) String sortByRating,
-        Model model
-) throws IOException {
+        List<winery> wineries;
 
-    List<winery> wineries;
+        if (city != null && !city.isEmpty() && name != null && !name.isEmpty()) {
+            wineries = wineryService.findByCityIgnoreCaseAndNameIgnoreCase(city, name);
 
+        } else if (city != null && !city.isEmpty()) {
+            wineries = wineryService.findByCityIgnoreCase(city);
 
-    if (city != null && !city.isEmpty() && name != null && !name.isEmpty()) {
-        wineries = wineryService.findByCityIgnoreCaseAndNameIgnoreCase(city, name);
+        } else if (name != null && !name.isEmpty()) {
+            wineries = wineryService.findByNameIgnoreCase(name);
 
-    } else if (city != null && !city.isEmpty()) {
-        wineries = wineryService.findByCityIgnoreCase(city);
+        } else {
+            wineries = wineryService.findAll();
+        }
 
-    } else if (name != null && !name.isEmpty()) {
-        wineries = wineryService.findByNameIgnoreCase(name);
+        if ("on".equals(sortByRating)) {
+            wineries.sort(Comparator.comparingDouble(winery::getRating).reversed());
+        }
 
-    } else {
-        wineries = wineryService.findAll();
+        PipeAndFilter<winery> pipeAndFilter = new PipeAndFilter<>();
+        TownNameChange townNameChange = new TownNameChange();
+        ChangeNumber changeNumber = new ChangeNumber();
+
+        pipeAndFilter.addFilter(townNameChange);
+        pipeAndFilter.addFilter(changeNumber);
+
+        List<winery> transformedWineries = new ArrayList<>();
+        for (com.example.demo.model.winery winery : wineries) {
+            com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
+            transformedWineries.add(transformedWinery);
+        }
+
+        model.addAttribute("wineries", transformedWineries);  // Use the transformed list for display
+        return "home-page";
     }
 
-    if ("on".equals(sortByRating)) {
-        wineries.sort(Comparator.comparingDouble(winery::getRating).reversed());
-    }
-
-    PipeAndFilter<winery> pipeAndFilter = new PipeAndFilter<>();
-//            NameChangeFilter nameChangeFilter = new NameChangeFilter();
-    TownNameChange townNameChange = new TownNameChange();
-//            NoneFilter noneFilter = new NoneFilter();
-    ChangeNumber changeNumber = new ChangeNumber();
-
-//            pipeAndFilter.addFilter(nameChangeFilter);
-    pipeAndFilter.addFilter(townNameChange);
-//            pipeAndFilter.addFilter(noneFilter);
-    pipeAndFilter.addFilter(changeNumber);
-
-
-    List<winery> transformedWineries = new ArrayList<>();
-    for(com.example.demo.model.winery winery : wineries){
-        com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
-        transformedWineries.add(transformedWinery);
-    }
-
-
-    model.addAttribute("wineries", wineries);
-    return "home-page";
-}
     @GetMapping("/winery-details/{id}")
     public String showWineryDetails(@PathVariable Long id, Model model) {
         winery selectedWinery = wineryService.findById(id);
