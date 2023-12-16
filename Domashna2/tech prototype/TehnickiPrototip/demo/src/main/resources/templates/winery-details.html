@@ -5,11 +5,16 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.js"></script>
+    <script src="script.js" defer></script>
+
     <title>Winery Details</title>
 </head>
 <body>
 
-<h2 th:text="${winery.name}"></h2>
+<h2 th:text="${winery.name}" data-winery-id="${winery.id}"></h2>
 
 <div>Address: <td th:text="${winery.address}"></td></div>
 <div>City: <td th:text="${winery.city}"></td></div>
@@ -23,11 +28,23 @@
 <div>Yellowpages link: <td th:text="${winery.yellowpages_link}"></td></div>
 <div>Catalog link: <td th:text="${winery.catalog_link}"></td></div>
 <div>Logo URL: <td th:text="${winery.logo_url}"></td></div>
-<div>Rating: <td th:text="${winery.rating}"></td></div>
+
+<h3>Rating:</h3>
+<div>
+    <div class="rating" id="rating" data-rating="0">
+        <span class="star" data-value="1">1</span>
+        <span class="star" data-value="2">2</span>
+        <span class="star" data-value="3">3</span>
+        <span class="star" data-value="4">4</span>
+        <span class="star" data-value="5">5</span>
+    </div>
+    <button id="submitRating">Submit Rating</button>
+</div>
 
 <br>
 <a th:href="@{/wine/home}">Back to Winery List</a>
 <br/>
 
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></body>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</body>
 </html>

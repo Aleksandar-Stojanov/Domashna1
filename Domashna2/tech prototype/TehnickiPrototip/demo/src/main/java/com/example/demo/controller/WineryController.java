@@ -39,7 +39,7 @@ public String showAllWineries(
     if (city != null && !city.isEmpty() && name != null && !name.isEmpty()) {
         wineries = wineryService.findByCityIgnoreCaseAndNameIgnoreCase(city, name);
 
-    } else if (city != null && !city.isEmpty()) {
+    } else if (city == null && !city.isEmpty()) {
         wineries = wineryService.findByCityIgnoreCase(city);
 
     } else if (name != null && !name.isEmpty()) {
@@ -70,7 +70,7 @@ public String showAllWineries(
         com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
         transformedWineries.add(transformedWinery);
     }
-//proba
+
 
     model.addAttribute("wineries", wineries);
     return "home-page";
