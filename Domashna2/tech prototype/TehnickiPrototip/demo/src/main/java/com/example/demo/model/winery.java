@@ -34,8 +34,10 @@ public class winery implements Serializable {
     private String catalog_link;
     private String facebook_link;
     private String instagram_link;
+    private String description;
     private String logo_url;
     private float rating;
+    private int numberofratings;
 
     public winery(String name, String phone, String mobile_phone, String additional_phone, String address, String city, String email, String website, String yellowpages_link, String catalog_link, String facebook_link, String instagram_link, String logo_url, float rating) {
         this.name = name;
