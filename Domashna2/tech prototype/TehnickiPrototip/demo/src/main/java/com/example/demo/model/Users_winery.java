@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table
+@Getter
 public class Users_winery {
     @Getter
     @Id
