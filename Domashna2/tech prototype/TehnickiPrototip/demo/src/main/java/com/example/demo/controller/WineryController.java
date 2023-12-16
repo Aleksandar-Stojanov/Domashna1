@@ -70,7 +70,7 @@ public String showAllWineries(
         com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
         transformedWineries.add(transformedWinery);
     }
-
+//proba
 
     model.addAttribute("wineries", wineries);
     return "home-page";
