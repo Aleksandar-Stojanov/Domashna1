@@ -1,58 +1,6 @@
-/*!* Your existing styles *!*/
-
-/*.rating {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*}*/
-
-/*.star {*/
-/*    font-size: 30px;*/
-/*    cursor: pointer;*/
-/*    transition: color 0.3s;*/
-/*}*/
-
-/*.star.active {*/
-/*    color: gold;*/
-/*}*/
-
-/*!* Additional styles to hide the default browser outline on the button *!*/
-/*button {*/
-/*    outline: none;*/
-/*    border: none;*/
-/*    background-color: #007bff;*/
-/*    color: white;*/
-/*    padding: 10px 20px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*button:hover {*/
-/*    background-color: #0056b3;*/
-/*}*/
-
-/*!* Adjustments for better visual appearance (optional) *!*/
-/*body {*/
-/*    font-family: Arial, sans-serif;*/
-/*    margin: 20px;*/
-/*}*/
-
-/*h2 {*/
-/*    color: #007bff;*/
-/*}*/
-
-/*h3 {*/
-/*    color: #333;*/
-/*}*/
-
-/*!* Rest of your existing styles *!*/
-/* Your existing styles */
-
-/* Additional styles for RateYo and button */
-.rating {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px; /* Adjust as needed */
+input {
+    padding: 10px;
+    margin-right: 10px;
 }
 
 button {
@@ -68,4 +16,3 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* Rest of your existing styles */

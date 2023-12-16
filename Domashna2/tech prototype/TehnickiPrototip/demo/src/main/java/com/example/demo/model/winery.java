@@ -56,7 +56,9 @@ public class winery implements Serializable {
 
     @ElementCollection
     private List<Float> ratings;
-
+    public void setRatings(List<Float> ratings) {
+        this.ratings = ratings;
+    }
     public Collection<Float> getRatings() {
         return ratings;
     }

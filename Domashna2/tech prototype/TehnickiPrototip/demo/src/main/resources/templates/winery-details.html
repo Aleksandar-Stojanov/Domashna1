@@ -28,18 +28,14 @@
 <div>Yellowpages link: <td th:text="${winery.yellowpages_link}"></td></div>
 <div>Catalog link: <td th:text="${winery.catalog_link}"></td></div>
 <div>Logo URL: <td th:text="${winery.logo_url}"></td></div>
+<div>Rating: <td th:text="${winery.rating}"></td></div>
 
 <h3>Rating:</h3>
 <div>
-    <div class="rating" id="rating" data-rating="0">
-<!--        <span class="star" data-value="1">1</span>-->
-<!--        <span class="star" data-value="2">2</span>-->
-<!--        <span class="star" data-value="3">3</span>-->
-<!--        <span class="star" data-value="4">4</span>-->
-<!--        <span class="star" data-value="5">5</span>-->
-    </div>
+    <input type="number" id="ratingInput" min="1" max="5" placeholder="Select rating" required />
     <button id="submitRating">Submit Rating</button>
 </div>
+
 
 <br>
 <a th:href="@{/wine/home}">Back to Winery List</a>

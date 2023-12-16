@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface WineryRepository extends JpaRepository<winery, Long> {
     List<winery> findByCityIgnoreCase(String city);
     List<winery> findByNameIgnoreCase(String name);
-    List<winery> findByCityIgnoreCaseAndNameIgnoreCase(String name, String city);
+    List<winery> findByCityIgnoreCaseAndNameIgnoreCase(String city, String name);
     Optional<winery> findById(Long id);
 }

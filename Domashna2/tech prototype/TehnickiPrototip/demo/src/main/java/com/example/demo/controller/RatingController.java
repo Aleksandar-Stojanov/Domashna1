@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import java.util.Collection;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/rating")
@@ -20,44 +23,22 @@ public class RatingController {
 
     @PostMapping("/submit")
     @ResponseBody
-    public ResponseEntity<String> submitRating(@RequestParam Long wineryId, @RequestParam Float rating) {
+    public ResponseEntity<Map<String, Object>> submitRating(@RequestParam Long wineryId, @RequestParam Float rating) {
         try {
-            // Retrieve the winery from the database
-            winery existingWinery = wineryService.findById(wineryId);
+            Float updatedRating = wineryService.submitRating(wineryId, rating);
 
-            if (existingWinery != null) {
-                // Add the new rating to the existing ratings
-                Collection<Float> ratings = existingWinery.getRatings();
-                ratings.add(rating);
+            if (updatedRating != null) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "Rating submitted successfully");
+                response.put("rating", updatedRating);
 
-                // Calculate the average rating
-                Float averageRating = calculateAverageRating(ratings);
-
-                // Update the winery's average rating
-                existingWinery.setRating(averageRating);
-
-                // Save the updated winery to the database
-                wineryService.save(existingWinery);
-
-                return ResponseEntity.ok("Rating submitted successfully");
+                return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Winery not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error", "Winery not found"));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting rating");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Error submitting rating"));
         }
     }
 
-    // Helper method to calculate the average rating
-    private Float calculateAverageRating(Collection<Float> ratings) {
-        if (!ratings.isEmpty()) {
-            float sum = 0.0f;
-            for (Float rating : ratings) {
-                sum += rating;
-            }
-            return sum / ratings.size();
-        } else {
-            return 0.0f; // or handle the case where there are no ratings
-        }
-    }
 }

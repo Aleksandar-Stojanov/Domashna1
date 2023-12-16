@@ -4,6 +4,7 @@ import com.example.demo.model.winery;
 import com.example.demo.repository.WineryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -18,7 +19,6 @@ public class WineryServiceImpl implements WineryService {
     public winery save(String name, String phone, String mobile_phone, String additional_phone, String address, String city, String email, String website, String yellowpages_link, String catalog_link, String facebook_link, String instagram_link, String logo_url, float rating) {
         winery winery = new winery(name, phone, mobile_phone, additional_phone, address, city, email, website, yellowpages_link, catalog_link, facebook_link, instagram_link, logo_url, rating);
         wineryRepository.save(winery);
-
         return winery;
     }
 
@@ -48,37 +48,55 @@ public class WineryServiceImpl implements WineryService {
     }
 
     @Override
-    public void updateRating(Long wineryId, float newRating) {
-        winery winery = wineryRepository.findById(wineryId).orElse(null);
-
-        if (winery != null) {
-            winery.setRating(newRating);
-            wineryRepository.save(winery);
+    public Float calculateAverageRating(Collection<Float> ratings) {
+        if (!ratings.isEmpty()) {
+            float sum = 0.0f;
+            for (Float rating : ratings) {
+                sum += rating;
+            }
+            return sum / ratings.size();
+        } else {
+            return 0.0f; // or handle the case where there are no ratings
         }
     }
 
     @Override
-    public Float calculateAverageRating(Long wineryId) {
+    public void save(winery winery) {
+        wineryRepository.save(winery);
+    }
+
+    @Override
+    public winery saveWithUpdatedRating(Long wineryId, Float newRating) {
         winery winery = wineryRepository.findById(wineryId).orElse(null);
 
         if (winery != null) {
             List<Float> ratings = (List<Float>) winery.getRatings();
-            if (!ratings.isEmpty()) {
-                float sum = 0.0f;
-                for (Float rating : ratings) {
-                    sum += rating;
-                }
-                return sum / ratings.size();
-            } else {
-                return 0.0f; // or handle the case where there are no ratings
-            }
-        } else {
-            return 0.0f; // or handle the case where the winery is not found
+            ratings.add(newRating);
+
+            float averageRating = calculateAverageRating(ratings);
+            winery.setRating(averageRating);
+
+            return wineryRepository.save(winery);
         }
-    }
-    @Override
-    public void save(winery existingWinery) {
-        wineryRepository.save(existingWinery);
+        return null;
     }
 
+    @Override
+    public Float submitRating(Long wineryId, Float newRating) {
+        winery winery = wineryRepository.findById(wineryId).orElse(null);
+
+        if (winery != null) {
+            List<Float> ratings = (List<Float>) winery.getRatings();
+            ratings.add(newRating);
+
+            float averageRating = calculateAverageRating(ratings);
+            winery.setRating(averageRating);
+
+            wineryRepository.save(winery);
+
+            return averageRating; // Return the updated rating
+        }
+
+        return null; // or throw an exception if the winery is not found
+    }
 }
