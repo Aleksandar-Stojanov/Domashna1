@@ -142,3 +142,11 @@ INSERT INTO winery (name,phone,mobile_phone,additional_phone,address,city,email,
 	 ('SATO ROJAL','043/371425','070/218565','n','n','НЕГОТИНО','n','n','https://yellowpages.com.mk//firma/53108/ШАТО_РОЈАЛ','n','n','n','n',2.3),
 	 ('SATO SOPOT','02/2602032','n','n','ЈАДРАНСКА МАГИСТРАЛА 135','СКОПЈЕ','contact@chateausopot.com.mk','www.chateausopot.mk','https://yellowpages.com.mk//firma/53091/ШАТО_СОПОТ','n','n','n','n',1.4),
 	 ('FILOVSKI VINARIJA','02/3133394','n','02/3119784','11 ОКТОМВРИ 23-А 1/1','СКОПЈЕ','contact@filovski.com.mk','www.filovski.com.mk','https://yellowpages.com.mk//firma/46474/ФИЛОВСКИ_ВИНАРИЈА','n','n','n','n',4.1);
+
+
+INSERT INTO USERS_WINERY(DATE_OF_BIRTH ,EMAIL ,NAME,PASSWORD ,SURNAME ,USERNAME)
+VALUES
+    ('2000-12-28','petko.petkov15@gmail.com','Petko','pp','Petkov','petko.petkov'),
+    ('2001-10-11','pavlinka.pavlova@yahoo.com','Pavlinka','pp','Pavlova','pavlinka.pavlova'),
+    ('1978-01-08','trajkovakika6@gmail.com','Kristina','kt','Trajkova','trajkovakika'),
+    ('1999-01-01','admin@hotmail.com','admin','admin','admin','admin')
