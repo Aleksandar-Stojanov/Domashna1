@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import com.example.demo.model.winery;
 import com.example.demo.repository.WineryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,13 +24,23 @@ public class WineryServiceImpl implements WineryService {
     }
 
     @Override
+    @Transactional
     public winery findById(Long id) {
         return this.wineryRepository.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public List<winery> findAll() {
-        return (List<winery>) wineryRepository.findAll();
+
+        List<winery> wineries=  wineryRepository.findAll();
+        wineries.forEach(winery -> {
+            if (winery.getRatings() != null) {
+                winery.getRatings().size(); // Initialize the collection
+            }
+        });
+
+        return wineries;
     }
 
     @Override
@@ -81,4 +92,11 @@ public class WineryServiceImpl implements WineryService {
         wineryRepository.save(existingWinery);
     }
 
+    @Transactional
+    public void accessRatingsCollection(Long wineryId) {
+        winery myWinery = wineryRepository.findById(wineryId).orElse(null);
+        if (myWinery != null) {
+            myWinery.getRatings().size(); // Access ratings collection within the transactional context
+        }
+    }
 }
