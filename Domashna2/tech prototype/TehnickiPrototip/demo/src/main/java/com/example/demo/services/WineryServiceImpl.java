@@ -49,8 +49,8 @@ public class WineryServiceImpl implements WineryService {
     }
 
     @Override
-    public List<winery> findByNameIgnoreCase(String name) {
-        return (List<winery>) wineryRepository.findByNameIgnoreCase(name);
+    public List<winery> findByNameContainingIgnoreCase(String name) {
+        return (List<winery>) wineryRepository.findByNameContainingIgnoreCase(name);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class WineryController {
             wineries = wineryService.findByCityIgnoreCase(city);
 
         } else if (name != null && !name.isEmpty()) {
-            wineries = wineryService.findByNameIgnoreCase(name);
+            wineries = wineryService.findByNameContainingIgnoreCase(name);
 
         } else {
             wineries = wineryService.findAll();
