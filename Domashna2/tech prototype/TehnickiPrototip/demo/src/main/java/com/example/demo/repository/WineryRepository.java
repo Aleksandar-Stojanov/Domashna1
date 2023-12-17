@@ -13,4 +13,6 @@ public interface WineryRepository extends JpaRepository<winery, Long> {
     List<winery> findByNameContainingIgnoreCase(String name);
     List<winery> findByCityIgnoreCaseAndNameIgnoreCase(String name, String city);
     Optional<winery> findById(Long id);
+    List<winery> findTop5ByOrderByNumberofratingsDesc();
+
 }

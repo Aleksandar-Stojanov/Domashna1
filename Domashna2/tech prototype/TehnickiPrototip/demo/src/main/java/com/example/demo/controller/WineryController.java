@@ -72,6 +72,11 @@ public class WineryController {
         model.addAttribute("user",request.getSession().getAttribute("user"));
         model.addAttribute("wineries", transformedWineries);
         model.addAttribute("lastViewedWineries", request.getSession().getAttribute("lastViewedWineries"));
+
+        List<winery> top5Wineries = wineryService.findTop5ByOrderByNumberofratingsDesc();
+        model.addAttribute("top5Wineries", top5Wineries); // Add top 5 wineries to the model
+
+
         return "home-page";
     }
 

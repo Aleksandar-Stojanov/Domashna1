@@ -25,6 +25,16 @@
         </li>
     </ul>
 </div>
+<h2>Top 5 Wineries</h2>
+<h4>(With most reviews)</h4>
+<ul>
+    <li th:each="top5Winery : ${top5Wineries}">
+        <a th:href="@{/wine/winery-details/{id}(id=${top5Winery.id})}">
+            <span th:text="${top5Winery.name}"></span>
+        </a>
+    </li>
+</ul>
+
 <h2>Wineries</h2>
 <form th:action="@{/wine/home}" method="get">
     <label for="city">Enter city:</label>

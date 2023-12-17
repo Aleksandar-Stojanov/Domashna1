@@ -5,7 +5,7 @@ import com.example.demo.model.winery;
 import java.util.List;
 
 public interface WineryService {
-    public List<winery> findAll();
+    List<winery> findAll();
     List<winery> findByCityIgnoreCase(String city);
     List<winery> findByNameContainingIgnoreCase(String name);
     List<winery> findByCityIgnoreCaseAndNameIgnoreCase(String city, String name);
@@ -17,4 +17,7 @@ public interface WineryService {
     Float calculateAverageRating(Long wineryId);
 
     void save(winery existingWinery);
+
+    List<winery> findTop5ByOrderByNumberofratingsDesc();
+
 }

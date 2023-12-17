@@ -57,6 +57,10 @@ public class WineryServiceImpl implements WineryService {
     public List<winery> findByCityIgnoreCaseAndNameIgnoreCase(String city, String name) {
         return (List<winery>) wineryRepository.findByCityIgnoreCaseAndNameIgnoreCase(city, name);
     }
+    @Override
+    public List<winery> findTop5ByOrderByNumberofratingsDesc(){
+        return wineryRepository.findTop5ByOrderByNumberofratingsDesc();
+    };
 
     @Override
     public void updateRating(Long wineryId, float newRating) {
@@ -99,4 +103,7 @@ public class WineryServiceImpl implements WineryService {
             myWinery.getRatings().size(); // Access ratings collection within the transactional context
         }
     }
+
+
+
 }
