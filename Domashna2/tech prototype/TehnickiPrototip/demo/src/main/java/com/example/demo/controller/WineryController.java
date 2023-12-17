@@ -56,9 +56,12 @@ public class WineryController {
         PipeAndFilter<winery> pipeAndFilter = new PipeAndFilter<>();
         TownNameChange townNameChange = new TownNameChange();
         ChangeNumber changeNumber = new ChangeNumber();
-
+        NameChangeFilter nameChangeFilter = new NameChangeFilter();
+        NoneFilter noneFilter = new NoneFilter();
         pipeAndFilter.addFilter(townNameChange);
         pipeAndFilter.addFilter(changeNumber);
+        pipeAndFilter.addFilter(nameChangeFilter);
+        pipeAndFilter.addFilter(noneFilter);
 
         List<winery> transformedWineries = new ArrayList<>();
         for (com.example.demo.model.winery winery : wineries) {

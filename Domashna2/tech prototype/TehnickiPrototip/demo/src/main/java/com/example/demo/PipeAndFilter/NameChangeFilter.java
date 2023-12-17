@@ -9,12 +9,17 @@ public class NameChangeFilter implements FilterData<winery> {
         public winery execute(winery input) {
             String res = input.getName();
             res=res.toLowerCase();
-            res=Character.toUpperCase(res.charAt(0)) + res.substring(1);
+            String[] words = res.split("\\s");
+//            res=Character.toUpperCase(res.charAt(0)) + res.substring(1);
 //            String res=tmp + ",";
 //            for(int i=1;i<parts.length;i++){
 //                res+=parts[i] + ",";
 //            }
-            input.setName(res);
+            for (int i = 0; i < words.length; i++) {
+                words[i] = Character.toUpperCase(words[i].charAt(0)) + words[i].substring(1);
+            }
+            String name = String.join(" ", words);
+            input.setName(name);
             return input;
         }
 }

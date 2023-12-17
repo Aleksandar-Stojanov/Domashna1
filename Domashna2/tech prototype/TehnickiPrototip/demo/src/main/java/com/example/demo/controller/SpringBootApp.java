@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.PipeAndFilter.ChangeNumber;
-import com.example.demo.PipeAndFilter.PipeAndFilter;
-import com.example.demo.PipeAndFilter.TownNameChange;
+import com.example.demo.PipeAndFilter.*;
 import com.example.demo.model.winery;
 import com.example.demo.services.WineryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +24,24 @@ public class SpringBootApp {
         PipeAndFilter<winery> pipeAndFilter = new PipeAndFilter<>();
         TownNameChange townNameChange = new TownNameChange();
         ChangeNumber changeNumber = new ChangeNumber();
+        NameChangeFilter nameChangeFilter = new NameChangeFilter();
+        NoneFilter noneFilter = new NoneFilter();
 
         pipeAndFilter.addFilter(townNameChange);
         pipeAndFilter.addFilter(changeNumber);
+        pipeAndFilter.addFilter(nameChangeFilter);
+        pipeAndFilter.addFilter(noneFilter);
 
         List<winery> wineries = wineryService.findAll();
 
         List<winery> transformedWineries = new ArrayList<>();
-        for(com.example.demo.model.winery winery : wineries){
-            com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
-            transformedWineries.add(transformedWinery);
-
-            transformedWineries.forEach(System.out::println);
-
-        }
+//        for(com.example.demo.model.winery winery : wineries){
+//            com.example.demo.model.winery transformedWinery = pipeAndFilter.runFilters(winery);
+//            transformedWineries.add(transformedWinery);
+//
+//            transformedWineries.forEach(System.out::println);
+//
+//        }
     }
     @EventListener(ApplicationReadyEvent.class)
     public void executeAfterStartup() throws IOException {
