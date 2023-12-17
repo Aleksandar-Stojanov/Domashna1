@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.PipeAndFilter.*;
+import com.example.demo.model.Users_winery;
 import com.example.demo.model.winery;
 import com.example.demo.services.WineryService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,16 +71,31 @@ public class WineryController {
         }
         model.addAttribute("user",request.getSession().getAttribute("user"));
         model.addAttribute("wineries", transformedWineries);
+        model.addAttribute("lastViewedWineries", request.getSession().getAttribute("lastViewedWineries"));
         return "home-page";
     }
 
     @GetMapping("/winery-details/{id}")
-    public String showWineryDetails(@PathVariable Long id, Model model) {
+    public String showWineryDetails(@PathVariable Long id, Model model, HttpServletRequest request) {
         winery selectedWinery = wineryService.findById(id);
 
         if (selectedWinery != null) {
             model.addAttribute("winery", selectedWinery);
-            return "winery-details";
+
+            Users_winery user = (Users_winery) request.getSession().getAttribute("user");
+            List<winery> lastViewedWineries = (List<winery>) request.getSession().getAttribute("lastViewedWineries");
+            if (lastViewedWineries == null) {
+                lastViewedWineries = new ArrayList<>();
+            }
+            if (!lastViewedWineries.contains(selectedWinery)) {
+                lastViewedWineries.add(0, selectedWinery);
+                // Keep only the last 3 wineries
+                if (lastViewedWineries.size() > 3) {
+                    lastViewedWineries = lastViewedWineries.subList(0, 3);
+                }
+                request.getSession().setAttribute("lastViewedWineries", lastViewedWineries);
+            }
+                return "winery-details";
         } else {
             return "redirect:/wine/home";
         }

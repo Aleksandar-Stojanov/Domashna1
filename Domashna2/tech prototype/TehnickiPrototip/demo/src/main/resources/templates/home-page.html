@@ -15,6 +15,16 @@
 <div th:if="${user == null}">
     <a th:href="@{/login}">Login</a>
 </div>
+<div th:if="${lastViewedWineries != null}">
+    <h2>Last Viewed Wineries</h2>
+    <ul>
+        <li th:each="lastViewedWinery : ${lastViewedWineries}">
+            <a th:href="@{/wine/winery-details/{id}(id=${lastViewedWinery.id})}">
+                <span th:text="${lastViewedWinery.name}"></span>
+            </a>
+        </li>
+    </ul>
+</div>
 <h2>Wineries</h2>
 <form th:action="@{/wine/home}" method="get">
     <label for="city">Enter city:</label>
@@ -70,5 +80,6 @@
     </tbody>
 </table>
 <br/>
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></body>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</body>
 </html>
