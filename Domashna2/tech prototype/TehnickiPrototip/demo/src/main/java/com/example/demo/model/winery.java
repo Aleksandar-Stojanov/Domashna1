@@ -39,7 +39,7 @@ public class winery implements Serializable {
     private float rating;
     private int numberofratings;
 
-    public winery(String name, String phone, String mobile_phone, String additional_phone, String address, String city, String email, String website, String yellowpages_link, String catalog_link, String facebook_link, String instagram_link, String logo_url, float rating) {
+    public winery(String name, String phone, String mobile_phone, String additional_phone, String address, String city, String email, String website, String yellowpages_link, String catalog_link, String facebook_link, String instagram_link, String logo_url, float rating, int numberofratings) {
         this.name = name;
         this.phone = phone;
         this.mobile_phone = mobile_phone;
@@ -54,6 +54,7 @@ public class winery implements Serializable {
         this.instagram_link = instagram_link;
         this.logo_url = logo_url;
         this.rating = rating;
+        this.numberofratings= numberofratings;
     }
 
     @ElementCollection
@@ -65,5 +66,12 @@ public class winery implements Serializable {
     }
     public void setRatings(List<Float> ratings) {
         this.ratings = ratings;
+    }
+
+    public void setNumberOfRatings(int numberofratings) {
+        this.numberofratings=numberofratings;
+    }
+    public int getNumberOfRatings() {
+        return numberofratings;
     }
 }

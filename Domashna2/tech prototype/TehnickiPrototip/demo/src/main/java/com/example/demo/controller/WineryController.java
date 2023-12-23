@@ -5,6 +5,8 @@ import com.example.demo.model.Users_winery;
 import com.example.demo.model.winery;
 import com.example.demo.services.WineryService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -105,4 +107,54 @@ public class WineryController {
             return "redirect:/wine/home";
         }
     }
+
+//    @PostMapping("/update-rating")
+//    public ResponseEntity<String> updateWineryRating(
+//            @RequestParam Long wineryId,
+//            @RequestParam int rating
+//    ) {
+//        try {
+//            winery selectedWinery = wineryService.findById(wineryId);
+//            if (selectedWinery != null) {
+//                selectedWinery.setRating(rating);
+//                wineryService.save(selectedWinery);
+//                return ResponseEntity.ok(String.valueOf(selectedWinery.getRating())); // Return updated rating as a string
+//            } else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating rating.");
+//        }
+//    }
+    @PostMapping("/update-rating")
+    public ResponseEntity<String> submitRating(@RequestParam Long wineryId, @RequestParam Float rating) {
+        try {
+            // Retrieve the winery from the database
+            winery existingWinery = wineryService.findById(wineryId);
+
+            if (existingWinery != null) {
+                // Calculate the new average rating
+                Float currentRating = existingWinery.getRating();
+                Integer currentNumberOfRatings = existingWinery.getNumberOfRatings();
+
+                Float newRating = (currentRating * currentNumberOfRatings + rating) / (currentNumberOfRatings + 1);
+
+                // Update the winery's average rating and number of ratings
+                existingWinery.setRating(newRating);
+                existingWinery.setNumberOfRatings(currentNumberOfRatings + 1);
+
+                // Save the updated winery to the database
+                wineryService.save(existingWinery);
+
+                return ResponseEntity.ok("winery-details");
+                //return ResponseEntity.ok("Rating submitted successfully. New rating: " + newRating);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting rating");
+        }
+    }
+
+
 }

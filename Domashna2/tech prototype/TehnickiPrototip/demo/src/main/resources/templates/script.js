@@ -1,80 +1,35 @@
-// $(document).ready(function () {
-//     const stars = $('.star');
-//     const ratingContainer = $('#rating');
-//
-//     stars.on('mouseover', hoverStar);
-//     stars.on('mouseout', resetStars);
-//     stars.on('click', setRating);
-//
-//     function hoverStar(e) {
-//         const hoverValue = $(e.target).data('value');
-//         highlightStars(hoverValue);
-//     }
-//
-//     function resetStars() {
-//         const currentRating = ratingContainer.data('rating');
-//         highlightStars(currentRating);
-//     }
-//
-//     function setRating(e) {
-//         const clickedValue = $(e.target).data('value');
-//         ratingContainer.data('rating', clickedValue);
-//         resetStars();
-//     }
-//
-//     $('#submitRating').on('click', function () {
-//         const selectedRating = ratingContainer.data('rating');
-//
-//         $.ajax({
-//             type: 'POST',  // Use POST method
-//             url: '/rating/submit',  // Replace with the actual URL for your server endpoint
-//             data: { wineryId: wineryId, rating: selectedRating },  // Include the necessary data
-//             success: function (response) {
-//                 alert('Rating submitted successfully');
-//                 // You may want to update the UI or take other actions based on the server response
-//             },
-//             error: function (error) {
-//                 alert('Error submitting rating: ' + error.responseText);
-//             }
-//         });
-//     });
-//
-//     function highlightStars(value) {
-//         stars.each(function () {
-//             const starValue = $(this).data('value');
-//             $(this).toggleClass('active', starValue <= value);
-//         });
-//     }
-// });
-
-$(document).ready(function () {
-    const ratingContainer = $("#rating");
-
-    ratingContainer.rateYo({
+$(document).ready(function() {
+    // Initialize RateYo
+    $("#rating").rateYo({
         starWidth: "20px",
-        readOnly: false, // Set to false if you want users to be able to rate
-        rating: ratingContainer.data("rating"),
-        onChange: function (rating, rateYoInstance) {
-            // Display the selected rating dynamically (optional)
-            // You can customize this part based on your UI requirements
-            console.log("Selected Rating: " + rating);
-        },
+        fullStar: true,
+        onSet: function(rating, rateYoInstance) {
+            // Store the rating value in a data attribute for later use
+            $("#rating").data("rating-value", rating);
+        }
     });
 
-    $("#submitRating").on("click", function () {
-        const selectedRating = ratingContainer.rateYo("rating");
+    // Handle Submit Rating Button Click
+    $("#submitRating").click(function() {
+        var wineryId = $("h2").data("winery-id");
+        var ratingValue = $("#rating").data("rating-value");
 
+        // Send an AJAX request to submit the rating
         $.ajax({
+            url: "/rating/submit",
             type: "POST",
-            url: "/rating/submit", // Replace with your actual server endpoint
-            data: { wineryId: wineryId, rating: selectedRating },
-            success: function (response) {
-                alert(response); // Display success message
-                // You may want to refresh the page or update the UI based on the response
+            data: {
+                wineryId: wineryId,
+                rating: ratingValue
             },
-            error: function (error) {
-                alert("Error submitting rating: " + error.responseText);
+            success: function(response) {
+                // Handle success, maybe show a confirmation message
+                alert("Rating submitted successfully!");
             },
+            error: function(error) {
+                // Handle error, maybe show an error message
+                alert("Error submitting rating!");
+            }
         });
     });
 });

@@ -5,11 +5,9 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.css"/>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.js"></script>
-    <script src="script.js" defer></script>
-
     <title>Winery Details</title>
 </head>
 <body>
@@ -28,18 +26,71 @@
 <div>Yellowpages link: <td th:text="${winery.yellowpages_link}"></td></div>
 <div>Catalog link: <td th:text="${winery.catalog_link}"></td></div>
 <div>Logo URL: <td th:text="${winery.logo_url}"></td></div>
+<div>Rating: <td th:text="${winery.rating}"></td></div>
+
 
 <h3>Rating:</h3>
-<div>
-    <div class="rating" id="rating" data-rating="0">
-<!--        <span class="star" data-value="1">1</span>-->
-<!--        <span class="star" data-value="2">2</span>-->
-<!--        <span class="star" data-value="3">3</span>-->
-<!--        <span class="star" data-value="4">4</span>-->
-<!--        <span class="star" data-value="5">5</span>-->
+<form id="ratingForm">
+    <div class="rating">
+        <input type="radio" id="star5" name="rating" value="5" />
+        <label for="star5" title="5 stars"></label>
+
+        <input type="radio" id="star4" name="rating" value="4" />
+        <label for="star4" title="4 stars"></label>
+
+        <input type="radio" id="star3" name="rating" value="3" />
+        <label for="star3" title="3 stars"></label>
+
+        <input type="radio" id="star2" name="rating" value="2" />
+        <label for="star2" title="2 stars"></label>
+
+        <input type="radio" id="star1" name="rating" value="1" />
+        <label for="star1" title="1 star"></label>
     </div>
-    <button id="submitRating">Submit Rating</button>
-</div>
+    <!-- Hidden input to store the winery ID or any other data you need -->
+    <input type="hidden" id="wineryId" name="wineryId" value="${winery.id}">
+</form>
+<!--<button id="submitRating">Submit Rating</button>-->
+
+<!--<script>-->
+<!--    // Submit the form when a star is clicked-->
+<!--    document.querySelectorAll('.rating input[type="radio"]').forEach(function(radio) {-->
+<!--        radio.addEventListener('click', function() {-->
+<!--            document.getElementById('ratingForm').submit();-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<script>
+    document.querySelectorAll('.rating input[type="radio"]').forEach(function(radio) {
+        radio.addEventListener('click', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // AJAX request to update the rating in the database
+            fetch('/wine/update-rating', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `wineryId=${document.getElementById('wineryId').value}&rating=${radio.value}`
+            })
+                .then(response => response.text()) // Convert response to text
+                .then(updatedRating => {
+                    // Update the displayed rating
+                    document.querySelector('div.rating td').textContent = updatedRating;
+                })
+                .catch(error => {
+                    console.error('Error updating rating:', error);
+                })
+                .finally(() => {
+                    // If you still want to submit the form after updating the rating, you can do so here
+                    document.getElementById('ratingForm').submit();
+                });
+        });
+    });
+
+</script>
+
 
 <br>
 <a th:href="@{/wine/home}">Back to Winery List</a>
