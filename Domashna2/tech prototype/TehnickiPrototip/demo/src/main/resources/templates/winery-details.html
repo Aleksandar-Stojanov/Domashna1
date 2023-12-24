@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<h2 th:text="${winery.name}" data-winery-id="${winery.id}"></h2>
+<h2 th:text="${winery.name}" ></h2>
 
 <div>Address: <td th:text="${winery.address}"></td></div>
 <div>City: <td th:text="${winery.city}"></td></div>
@@ -35,69 +35,18 @@
 <div>Logo URL: <td th:text="${winery.logo_url}"></td></div>
 <div>Rating: <td th:text="${winery.rating}"></td></div>
 
-
+<div th:if="${user != null}">
 <h3>Rating:</h3>
-<form id="ratingForm">
+<form id="ratingForm" method="post" th:action="@{/rating/submit/{id}(id=${winery.id})}">
     <div class="rating">
-        <input type="radio" id="star5" name="rating" value="5" />
-        <label for="star5" title="5 stars"></label>
-
-        <input type="radio" id="star4" name="rating" value="4" />
-        <label for="star4" title="4 stars"></label>
-
-        <input type="radio" id="star3" name="rating" value="3" />
-        <label for="star3" title="3 stars"></label>
-
-        <input type="radio" id="star2" name="rating" value="2" />
-        <label for="star2" title="2 stars"></label>
-
-        <input type="radio" id="star1" name="rating" value="1" />
-        <label for="star1" title="1 star"></label>
+        <button type="submit" value="1" name="rating">1</button>
+        <button type="submit" value="2" name="rating">2</button>
+        <button type="submit" value="3" name="rating">3</button>
+        <button type="submit" value="4" name="rating">4</button>
+        <button type="submit" value="5" name="rating">5</button>
     </div>
-    <!-- Hidden input to store the winery ID or any other data you need -->
-    <input type="hidden" id="wineryId" name="wineryId" value="${winery.id}">
 </form>
-<!--<button id="submitRating">Submit Rating</button>-->
-
-<!--<script>-->
-<!--    // Submit the form when a star is clicked-->
-<!--    document.querySelectorAll('.rating input[type="radio"]').forEach(function(radio) {-->
-<!--        radio.addEventListener('click', function() {-->
-<!--            document.getElementById('ratingForm').submit();-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-<script>
-    document.querySelectorAll('.rating input[type="radio"]').forEach(function(radio) {
-        radio.addEventListener('click', function(event) {
-            // Prevent the default form submission
-            event.preventDefault();
-
-            // AJAX request to update the rating in the database
-            fetch('/rating/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `wineryId=${document.getElementById('wineryId').value}&rating=${radio.value}`
-            })
-                .then(response => response.text()) // Convert response to text
-                .then(updatedRating => {
-                    // Update the displayed rating
-                    document.querySelector('div.rating td').textContent = updatedRating;
-                })
-                .catch(error => {
-                    console.error('Error updating rating:', error);
-                })
-                .finally(() => {
-                    // If you still want to submit the form after updating the rating, you can do so here
-                    document.getElementById('ratingForm').submit();
-                });
-        });
-    });
-
-</script>
-
+</div>
 
 <br>
 <a th:href="@{/wine/home}">Back to Winery List</a>

@@ -64,43 +64,40 @@
 package com.example.demo.controller;
 import com.example.demo.model.winery;
 import com.example.demo.services.WineryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/rating")
 public class RatingController {
 
-    @Autowired
-    private WineryService wineryService;
+    private final WineryService wineryService;
 
-    @PostMapping("/submit")
-    public String submitRating(@RequestParam Long wineryId, @RequestParam Float rating) {
+    public RatingController(WineryService wineryService) {
+        this.wineryService = wineryService;
+    }
+
+
+    @PostMapping("/submit/{id}")
+    public String submitRating(@PathVariable Long id, @RequestParam Integer rating, Model model) {
         try {
             // Retrieve the winery from the database
-            winery existingWinery = wineryService.findById(wineryId);
+            winery existingWinery = wineryService.findById(id);
 
             if (existingWinery != null) {
                 // Calculate the new average rating
                 Float currentRating = existingWinery.getRating();
-                Integer currentNumberOfRatings = existingWinery.getNumberOfRatings();
+                Integer currentNumberOfRatings = Integer.parseInt(String.valueOf(existingWinery.getNumberOfRatings()));
 
                 Float newRating = (currentRating * currentNumberOfRatings + rating) / (currentNumberOfRatings + 1);
 
-                // Update the winery's average rating and number of ratings
                 existingWinery.setRating(newRating);
                 existingWinery.setNumberOfRatings(currentNumberOfRatings + 1);
 
-                // Save the updated winery to the database
                 wineryService.save(existingWinery);
 
-                return "redirect:/winery-details/" + wineryId; // Redirect to winery details page
+                return "redirect:/wine/winery-details/" + id; // Redirect to winery details page
             } else {
                 return "error"; // Or any other error page you have
             }

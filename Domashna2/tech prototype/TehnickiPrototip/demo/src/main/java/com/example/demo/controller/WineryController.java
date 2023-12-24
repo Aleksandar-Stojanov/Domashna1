@@ -102,6 +102,7 @@ public class WineryController {
                 }
                 request.getSession().setAttribute("lastViewedWineries", lastViewedWineries);
             }
+            model.addAttribute("user",request.getSession().getAttribute("user"));
             return "winery-details";
         } else {
             return "redirect:/wine/home";
