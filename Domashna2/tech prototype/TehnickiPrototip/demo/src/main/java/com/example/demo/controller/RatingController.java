@@ -81,8 +81,7 @@ public class RatingController {
     private WineryService wineryService;
 
     @PostMapping("/submit")
-    @ResponseBody
-    public ResponseEntity<String> submitRating(@RequestParam Long wineryId, @RequestParam Float rating) {
+    public String submitRating(@RequestParam Long wineryId, @RequestParam Float rating) {
         try {
             // Retrieve the winery from the database
             winery existingWinery = wineryService.findById(wineryId);
@@ -101,12 +100,13 @@ public class RatingController {
                 // Save the updated winery to the database
                 wineryService.save(existingWinery);
 
-                return ResponseEntity.ok("Rating submitted successfully");
+                return "redirect:/winery-details/" + wineryId; // Redirect to winery details page
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Winery not found");
+                return "error"; // Or any other error page you have
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error submitting rating");
+            return "error"; // Or any other error page you have
         }
     }
+
 }
