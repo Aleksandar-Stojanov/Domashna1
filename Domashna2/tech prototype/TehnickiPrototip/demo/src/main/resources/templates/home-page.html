@@ -6,6 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Winery List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenStreetMap with Search</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
 </head>
 <body>
 <div th:if="${user != null}">
@@ -90,6 +98,35 @@
     </tbody>
 </table>
 <br/>
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+
+<div id="map" style="height: 400px;"></div>
+
+<script>
+    var defaultCoordinates = [41.6086, 21.7453]; // Coordinates for North Macedonia
+
+    // Initialize the map with default coordinates
+    var map = L.map('map').setView(defaultCoordinates, 7);
+
+    // Add the OpenStreetMap tile layer with attribution
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add the search bar using leaflet-control-geocoder
+    var searchControl = L.Control.geocoder({
+        defaultMarkGeocode: false
+    }).on('markgeocode', function (e) {
+        var bbox = e.geocode.bbox;
+        var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+        ]).addTo(map);
+        map.fitBounds(poly.getBounds());
+    }).addTo(map);
+</script>
+
 </body>
 </html>

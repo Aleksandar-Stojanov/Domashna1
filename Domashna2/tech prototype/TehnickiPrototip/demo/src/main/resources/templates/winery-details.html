@@ -9,6 +9,13 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.js"></script>
     <title>Winery Details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OpenStreetMap with Search</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 </head>
 <body>
 
@@ -96,6 +103,55 @@
 <a th:href="@{/wine/home}">Back to Winery List</a>
 <br/>
 
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1539028.5239556145!2d20.91673145797043!3d41.11454553100533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1354159f70bc4809%3A0xe0f25ad6c81fc5b1!2z0KHQtdCy0LXRgNC90LAg0JzQsNC60LXQtNC-0L3QuNGY0LA!5e0!3m2!1smk!2smk!4v1701641048395!5m2!1smk!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<div id="map" style="height: 400px;"></div>
+<script>
+    // Set the winery address in a JavaScript variable
+    var wineryAddress = "[[${winery.address}]]" +" "+"[[${winery.city}]]"; // Assuming 'getAddress()' is the method in your Winery model
+
+    // Check if Leaflet is defined before using it
+    if (typeof L !== 'undefined') {
+        // Use Nominatim to convert the address to latitude and longitude
+        var geocoder = L.Control.Geocoder.nominatim();
+
+        // Initialize the map
+        var map = L.map('map').setView([0, 0], 13); // Initial view at (0, 0)
+
+        // Add the OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add the search bar using leaflet-control-geocoder
+        var searchControl = L.Control.geocoder({
+            defaultMarkGeocode: false
+        }).on('markgeocode', function (e) {
+            var bbox = e.geocode.bbox;
+            var poly = L.polygon([
+                bbox.getSouthEast(),
+                bbox.getNorthEast(),
+                bbox.getNorthWest(),
+                bbox.getSouthWest()
+            ]).addTo(map);
+            map.fitBounds(poly.getBounds());
+        }).addTo(map);
+
+        // Manually trigger geocoding for the initial winery address
+        geocoder.geocode(wineryAddress, function (results) {
+            if (results.length > 0) {
+                var latLng = results[0].center;
+
+                // Create a blue marker for the initial winery address
+                var marker = L.marker(latLng, { icon: L.divIcon({ className: 'leaflet-div-icon leaflet-div-icon-blue' }) })
+                    .bindPopup('Winery Address: ' + wineryAddress)
+                    .addTo(map);
+
+                // Set the view to the initial winery address
+                map.setView(latLng, 13);
+            }
+        });
+    } else {
+        console.error('Leaflet library is not defined.');
+    }
+</script>
 </body>
 </html>

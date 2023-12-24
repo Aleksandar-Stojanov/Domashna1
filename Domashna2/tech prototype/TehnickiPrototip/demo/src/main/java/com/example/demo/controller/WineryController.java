@@ -102,7 +102,7 @@ public class WineryController {
                 }
                 request.getSession().setAttribute("lastViewedWineries", lastViewedWineries);
             }
-                return "winery-details";
+            return "winery-details";
         } else {
             return "redirect:/wine/home";
         }
