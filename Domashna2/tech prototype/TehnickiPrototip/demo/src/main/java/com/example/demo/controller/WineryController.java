@@ -73,8 +73,9 @@ public class WineryController {
         }
         model.addAttribute("user",request.getSession().getAttribute("user"));
         model.addAttribute("wineries", transformedWineries);
-        model.addAttribute("lastViewedWineries", request.getSession().getAttribute("lastViewedWineries"));
-
+        if(request.getSession().getAttribute("user")!=null) {
+            model.addAttribute("lastViewedWineries", request.getSession().getAttribute("lastViewedWineries"));
+        }
         List<winery> top5Wineries = wineryService.findTop5ByOrderByNumberofratingsDesc();
         model.addAttribute("top5Wineries", top5Wineries); // Add top 5 wineries to the model
 
@@ -90,17 +91,19 @@ public class WineryController {
             model.addAttribute("winery", selectedWinery);
 
             Users_winery user = (Users_winery) request.getSession().getAttribute("user");
-            List<winery> lastViewedWineries = (List<winery>) request.getSession().getAttribute("lastViewedWineries");
-            if (lastViewedWineries == null) {
-                lastViewedWineries = new ArrayList<>();
-            }
-            if (!lastViewedWineries.contains(selectedWinery)) {
-                lastViewedWineries.add(0, selectedWinery);
-                // Keep only the last 3 wineries
-                if (lastViewedWineries.size() > 3) {
-                    lastViewedWineries = lastViewedWineries.subList(0, 3);
+            if(user!=null) {
+                List<winery> lastViewedWineries = (List<winery>) request.getSession().getAttribute("lastViewedWineries");
+                if (lastViewedWineries == null) {
+                    lastViewedWineries = new ArrayList<>();
                 }
-                request.getSession().setAttribute("lastViewedWineries", lastViewedWineries);
+                if (!lastViewedWineries.contains(selectedWinery)) {
+                    lastViewedWineries.add(0, selectedWinery);
+                    // Keep only the last 3 wineries
+                    if (lastViewedWineries.size() > 3) {
+                        lastViewedWineries = lastViewedWineries.subList(0, 3);
+                    }
+                    request.getSession().setAttribute("lastViewedWineries", lastViewedWineries);
+                }
             }
             model.addAttribute("user",request.getSession().getAttribute("user"));
             return "winery-details";
