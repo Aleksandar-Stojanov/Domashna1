@@ -5,11 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Winery List</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <style>
-        /* Add your custom CSS styles here */
         body {
             display: flex;
             flex-direction: column;
@@ -17,27 +15,27 @@
             padding: 0;
         }
         header {
-            background-color: #333; /* Background color for the header */
-            color: #fff; /* Text color for the header */
-            padding: 10px; /* Padding for the header */
-            width: 100% /* Adjusted width for the header */
-            z-index: 2; /* Ensure the header stays on top of other content */
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            width: 100%
+            z-index: 2;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 18px; /* Font size for the header */
-            height: 60px; /* Height for the header */
+            font-size: 18px;
+            height: 60px;
         }
         header h1 {
             margin: 0;
         }
         header a {
-            text-decoration: none; /* Remove underline */
-            color: white; /* White font color for header links */
+            text-decoration: none;
+            color: white;
         }
         a {
-            color: black; /* Set font color to black */
-            text-decoration: none; /* Remove underline */
+            color: black;
+            text-decoration: none;
         }
         #container {
             display: flex;
@@ -46,20 +44,20 @@
         }
         #sidebar {
             padding: 20px;
-            background-color: #f2f2f2; /* Background color for the sidebar */
-            overflow-y: auto; /* Enable vertical scroll for the sidebar */
-            max-height: calc(100vh - 40px); /* Set maximum height to fit viewport minus header height */
-            width: calc(33% - 20px); /* Width of the sidebar (one-third of the window minus padding) */
+            background-color: #f2f2f2;
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+            width: calc(33% - 20px);
         }
         #map {
-            height: calc(100vh - 40px); /* Height of the map, takes up remaining space */
-            width: 67%; /* Width of the map, takes up remaining space */
+            height: calc(100vh - 40px);
+            width: 67%;
         }
         form {
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Spacing between form elements */
+            gap: 10px;
         }
         label {
             margin-bottom: 5px;
@@ -67,26 +65,26 @@
         input[type="text"],
         input[type="checkbox"],
         button[type="submit"] {
-            width: 100px; /* Adjust the width of input elements and the search button */
+            width: 100px;
         }
         table {
             width: 100%;
-            border-collapse: collapse; /* Collapse table borders */
+            border-collapse: collapse;
         }
         tbody {
-            max-height: calc(100vh - 230px); /* Adjusted max height for tbody */
-            overflow-y: auto; /* Enable vertical scroll for tbody */
+            max-height: calc(100vh - 230px);
+            overflow-y: auto;
         }
         th, td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd; /* Add bottom border to table cells */
+            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f2f2f2; /* Set background color for table header */
+            background-color: #f2f2f2;
         }
         tbody tr:hover {
-            background-color: #f2f2f2; /* Change background color on hover */
+            background-color: #f2f2f2;
         }
 
     </style>
