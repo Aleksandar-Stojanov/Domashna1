@@ -114,6 +114,18 @@
                 </li>
             </ul>
         </div>
+        <div th:if="${user != null}">
+            <div th:if="${lastViewedWineries != null}">
+                <h2>Last Viewed Wineries</h2>
+                <ul>
+                    <li th:each="lastViewedWinery : ${lastViewedWineries}">
+                        <a th:href="@{/wine/winery-details/{id}(id=${lastViewedWinery.id})}">
+                            <span th:text="${lastViewedWinery.name}"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <h2>Wineries</h2>
         <form th:action="@{/wine/home}" method="get">
             <div>
@@ -130,7 +142,7 @@
             </div>
             <button type="submit">Search</button>
         </form>
-        <div style="overflow-x:auto;"> <!-- Add a wrapper div for horizontal scrolling -->
+        <div style="overflow-x:auto;">
             <table>
                 <thead>
                 <tr>
@@ -138,7 +150,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Iterate through wineries and populate the table rows -->
                 <tr th:each="winery : ${wineries}">
                     <td>
                         <a th:href="@{/wine/winery-details/{id}(id=${winery.id})}">
@@ -150,25 +161,21 @@
             </table>
         </div>
     </div>
-    <div id="map">
-    </div>
+    <div id="map"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <script>
-    var defaultCoordinates = [41.6086, 21.7453]; // Coordinates for North Macedonia
+    var defaultCoordinates = [41.6086, 21.7453];
 
-    // Initialize the map with default coordinates
     var map = L.map('map').setView(defaultCoordinates, 7);
 
-    // Add the OpenStreetMap tile layer with attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Add the search bar using leaflet-control-geocoder
     var searchControl = L.Control.geocoder({
         defaultMarkGeocode: false
     }).on('markgeocode', function (e) {
