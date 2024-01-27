@@ -1,106 +1,163 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Winery List</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenStreetMap with Search</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333; /* Background color for the header */
+            color: #fff; /* Text color for the header */
+            padding: 10px; /* Padding for the header */
+            width: 100% /* Adjusted width for the header */
+            z-index: 2; /* Ensure the header stays on top of other content */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px; /* Font size for the header */
+            height: 60px; /* Height for the header */
+        }
+        header h1 {
+            margin: 0;
+        }
+        header a {
+            text-decoration: none; /* Remove underline */
+            color: white; /* White font color for header links */
+        }
+        a {
+            color: black; /* Set font color to black */
+            text-decoration: none; /* Remove underline */
+        }
+        #container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+        }
+        #sidebar {
+            padding: 20px;
+            background-color: #f2f2f2; /* Background color for the sidebar */
+            overflow-y: auto; /* Enable vertical scroll for the sidebar */
+            max-height: calc(100vh - 40px); /* Set maximum height to fit viewport minus header height */
+            width: calc(33% - 20px); /* Width of the sidebar (one-third of the window minus padding) */
+        }
+        #map {
+            height: calc(100vh - 40px); /* Height of the map, takes up remaining space */
+            width: 67%; /* Width of the map, takes up remaining space */
+        }
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Spacing between form elements */
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="checkbox"],
+        button[type="submit"] {
+            width: 100px; /* Adjust the width of input elements and the search button */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Collapse table borders */
+        }
+        tbody {
+            max-height: calc(100vh - 230px); /* Adjusted max height for tbody */
+            overflow-y: auto; /* Enable vertical scroll for tbody */
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Add bottom border to table cells */
+        }
+        th {
+            background-color: #f2f2f2; /* Set background color for table header */
+        }
+        tbody tr:hover {
+            background-color: #f2f2f2; /* Change background color on hover */
+        }
 
+    </style>
 </head>
 <body>
-<div th:if="${user != null}">
-    <p>Logged in as: <span th:text="${user.name}"></span> <span th:text="${user.surname}"></span></p>
-    <a th:href="@{/logout}">Log out</a>
+<header>
+    <h1>Macedonian Winery Map</h1>
+    <div>
+        <div th:if="${user != null}">
+            <p th:text="'Logged in as: ' + ${user.name}"></p>
+            <a th:href="@{/logout}">Log out</a>
+        </div>
+        <div th:if="${user == null}">
+            <a th:href="@{/login}">Login</a>
+        </div>
+    </div>
+</header>
+<div id="container">
+    <div id="sidebar">
+        <div id="top5wineries">
+            <h2>Top 5 Wineries</h2>
+            <ul>
+                <li th:each="top5Winery : ${top5Wineries}">
+                    <a th:href="@{/wine/winery-details/{id}(id=${top5Winery.id})}">
+                        <span th:text="${top5Winery.name}"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h2>Wineries</h2>
+        <form th:action="@{/wine/home}" method="get">
+            <div>
+                <label for="city">Enter city:</label>
+                <input type="text" id="city" name="city">
+            </div>
+            <div>
+                <label for="name">Enter name:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div>
+                <label for="sortByRating">Sort by Rating:</label>
+                <input type="checkbox" id="sortByRating" name="sortByRating">
+            </div>
+            <button type="submit">Search</button>
+        </form>
+        <div style="overflow-x:auto;"> <!-- Add a wrapper div for horizontal scrolling -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Iterate through wineries and populate the table rows -->
+                <tr th:each="winery : ${wineries}">
+                    <td>
+                        <a th:href="@{/wine/winery-details/{id}(id=${winery.id})}">
+                            <span th:text="${winery.name}"></span>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="map">
+    </div>
 </div>
-<div th:if="${user == null}">
-    <a th:href="@{/login}">Login</a>
-</div>
-<div th:if="${lastViewedWineries != null}">
-    <h2>Last Viewed Wineries</h2>
-    <ul>
-        <li th:each="lastViewedWinery : ${lastViewedWineries}">
-            <a th:href="@{/wine/winery-details/{id}(id=${lastViewedWinery.id})}">
-                <span th:text="${lastViewedWinery.name}"></span>
-            </a>
-        </li>
-    </ul>
-</div>
-<h2>Top 5 Wineries</h2>
-<h4>(With most reviews)</h4>
-<ul>
-    <li th:each="top5Winery : ${top5Wineries}">
-        <a th:href="@{/wine/winery-details/{id}(id=${top5Winery.id})}">
-            <span th:text="${top5Winery.name}"></span>
-        </a>
-    </li>
-</ul>
 
-<h2>Wineries</h2>
-<form th:action="@{/wine/home}" method="get">
-    <label for="city">Enter city:</label>
-    <input type="text" id="city" name="city">
-    <label for="name">Enter name:</label>
-    <input type="text" id="name" name="name" >
-    <label for="sortByRating">Sort by Rating:</label>
-    <input type="checkbox" id="sortByRating" name="sortByRating" />
-    <button type="submit">Search</button>
-</form>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Mobile Phone</th>
-        <th>Additional Phone</th>
-        <th>Address</th>
-        <th>City</th>
-        <th>Email</th>
-        <th>Website</th>
-        <th>Yellow Pages Link</th>
-        <th>Catalog Link</th>
-        <th>Facebook Link</th>
-        <th>Instagram Link</th>
-        <th>Logo URL</th>
-        <th>Rating</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="winery : ${wineries}">
-        <td th:text="${winery.id}"></td>
-        <td>
-            <a th:href="@{/wine/winery-details/{id}(id=${winery.id})}">
-                <button type="button" style="cursor: pointer; border: none; background-color: white; color: black;">
-                    <span th:text="${winery.name}"></span>
-                </button>
-            </a>
-        </td>
-        <td th:text="${winery.mobile_phone}"></td>
-        <td th:text="${winery.additional_phone}"></td>
-        <td th:text="${winery.address}"></td>
-        <td th:text="${winery.city}"></td>
-        <td th:text="${winery.email}"></td>
-        <td th:text="${winery.website}"></td>
-        <td th:text="${winery.yellowpages_link}"></td>
-        <td th:text="${winery.catalog_link}"></td>
-        <td th:text="${winery.facebook_link}"></td>
-        <td th:text="${winery.instagram_link}"></td>
-        <td th:text="${winery.logo_url}"></td>
-        <td th:text="${winery.rating}"></td>
-    </tr>
-    </tbody>
-</table>
-<br/>
-
-
-<div id="map" style="height: 400px;"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <script>
     var defaultCoordinates = [41.6086, 21.7453]; // Coordinates for North Macedonia
