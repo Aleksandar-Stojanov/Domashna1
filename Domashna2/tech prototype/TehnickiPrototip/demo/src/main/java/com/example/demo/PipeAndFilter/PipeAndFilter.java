@@ -1,7 +1,5 @@
 package com.example.demo.PipeAndFilter;
 
-import ch.qos.logback.core.filter.Filter;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

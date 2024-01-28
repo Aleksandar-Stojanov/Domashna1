@@ -18,7 +18,6 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
-    //bi go dodal vo poseben servis
     private final Users_winery_Repository usersWineryRepository;
 
     public RegisterController(Users_winery_Repository usersWineryRepository) {

@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.model.winery;
-
 import java.util.List;
 
 public interface WineryService {
@@ -19,5 +18,4 @@ public interface WineryService {
     void save(winery existingWinery);
 
     List<winery> findTop5ByOrderByNumberofratingsDesc();
-
 }
