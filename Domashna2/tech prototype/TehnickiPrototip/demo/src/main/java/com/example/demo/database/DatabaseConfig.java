@@ -25,7 +25,7 @@ public class DatabaseConfig {
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDataSource(dataSource);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.addScript(new ClassPathResource("wineries_202312021436.sql")); // Adjust the path if necessary
+        databasePopulator.addScript(new ClassPathResource("wineries_202312021436.sql"));
         dataSourceInitializer.setDatabasePopulator(databasePopulator);
         return dataSourceInitializer;
     }

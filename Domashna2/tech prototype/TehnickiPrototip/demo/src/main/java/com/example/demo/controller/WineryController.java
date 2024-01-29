@@ -5,8 +5,6 @@ import com.example.demo.model.Users_winery;
 import com.example.demo.model.winery;
 import com.example.demo.services.WineryService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -77,8 +75,7 @@ public class WineryController {
             model.addAttribute("lastViewedWineries", request.getSession().getAttribute("lastViewedWineries"));
         }
         List<winery> top5Wineries = wineryService.findTop5ByOrderByNumberofratingsDesc();
-        model.addAttribute("top5Wineries", top5Wineries); // Add top 5 wineries to the model
-
+        model.addAttribute("top5Wineries", top5Wineries);
 
         return "home-page";
     }
@@ -111,5 +108,4 @@ public class WineryController {
             return "redirect:/wine/home";
         }
     }
-
 }

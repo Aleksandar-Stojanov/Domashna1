@@ -1,101 +1,233 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.css"/>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/rateyo@2.3.2/lib/cjs/rateyo.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <title>Winery Details</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>OpenStreetMap with Search</title>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            width: 100%
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            height: 60px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header a {
+            text-decoration: none;
+            color: white;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        #container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+        }
+
+        #sidebar {
+            padding: 20px;
+            background-color: #f2f2f2;
+            overflow-y: auto;
+            max-height: calc(100vh - 40px);
+            width: 33%
+        }
+
+        #map {
+            height: calc(100vh - 60px);
+            width: 67%
+        }
+
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="checkbox"],
+        button[type="submit"] {
+            width: 100px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        tbody {
+            max-height: calc(100vh - 230px);
+            overflow-y: auto;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #f2f2f2;
+        }
+        .rating-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .rating-container h3 {
+            margin-right: 10px;
+        }
+
+        .rating-container span {
+            display: inline-block;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .rating button {
+            background: none;
+            border: none;
+            font-size: 30px;
+            color: #ffd700;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .rating button:last-child {
+            margin-right: 0;
+        }
+
+        .rating button:hover {
+            color: #ffcc00;
+        }
+    </style>
 </head>
 <body>
-
-<h2 th:text="${winery.name}" ></h2>
-
-<div>Address: <td th:text="${winery.address}"></td></div>
-<div>City: <td th:text="${winery.city}"></td></div>
-<div>Phone: <td th:text="${winery.phone}"></td></div>
-<div>Mobile Phone: <td th:text="${winery.mobile_phone}"></td></div>
-<div>Additional Phone: <td th:text="${winery.additional_phone}"></td></div>
-<div>Email: <td th:text="${winery.email}"></td></div>
-<div>Website: <td th:text="${winery.website}"></td></div>
-<div>Instagram link: <td th:text="${winery.instagram_link}"></td></div>
-<div>Facebook link: <td th:text="${winery.facebook_link}"></td></div>
-<div>Yellowpages link: <td th:text="${winery.yellowpages_link}"></td></div>
-<div>Catalog link: <td th:text="${winery.catalog_link}"></td></div>
-<div>Logo URL: <td th:text="${winery.logo_url}"></td></div>
-<div>Rating: <td th:text="${winery.rating}"></td></div>
-
-<div th:if="${user != null}">
-<h3>Rating:</h3>
-<form id="ratingForm" method="post" th:action="@{/rating/submit/{id}(id=${winery.id})}">
-    <div class="rating">
-        <button type="submit" value="1" name="rating">1</button>
-        <button type="submit" value="2" name="rating">2</button>
-        <button type="submit" value="3" name="rating">3</button>
-        <button type="submit" value="4" name="rating">4</button>
-        <button type="submit" value="5" name="rating">5</button>
+<header>
+    <h1>Winery Details</h1>
+    <div>
+        <div th:if="${user != null}">
+            <p th:text="'Logged in as: ' + ${user.name}"></p>
+            <a th:href="@{/logout}">Log out</a>
+        </div>
+        <div th:if="${user == null}">
+            <a th:href="@{/login}">Login</a>
+        </div>
     </div>
-</form>
+</header>
+<div id="container">
+    <div id="sidebar">
+        <div>
+            <h2 th:text="${winery.name}"></h2>
+            <div>Address: <span th:text="${winery.address}"></span></div>
+            <div>City: <span th:text="${winery.city}"></span></div>
+            <div>Phone: <span th:text="${winery.phone}"></span></div>
+            <div>Mobile Phone: <span th:text="${winery.mobile_phone}"></span></div>
+            <div>Additional Phone: <span th:text="${winery.additional_phone}"></span></div>
+            <div>Email: <span th:text="${winery.email}"></span></div>
+            <div>Website: <span th:text="${winery.website}"></span></div>
+            <div>Instagram link: <span th:text="${winery.instagram_link}"></span></div>
+            <div>Facebook link: <span th:text="${winery.facebook_link}"></span></div>
+            <div>Yellowpages link: <span th:text="${winery.yellowpages_link}"></span></div>
+            <div>Catalog link: <span th:text="${winery.catalog_link}"></span></div>
+            <div>Logo URL: <span th:text="${winery.logo_url}"></span></div>
+            <div>Rating: <span th:text="${winery.rating}"></span></div>
+        </div>
+        <div th:if="${user != null}" class="rating">
+            <div class="rating-container">
+                <h3>Rating:</h3>
+                <form id="ratingForm" method="post" th:action="@{/rating/submit/{id}(id=${winery.id})}" class="rating">
+                    <span><button type="submit" value="1" name="rating">&#9733;</button></span>
+                    <span><button type="submit" value="2" name="rating">&#9733;</button></span>
+                    <span><button type="submit" value="3" name="rating">&#9733;</button></span>
+                    <span><button type="submit" value="4" name="rating">&#9733;</button></span>
+                    <span><button type="submit" value="5" name="rating">&#9733;</button></span>
+                </form>
+            </div>
+        </div>
+        <br>
+        <a th:href="@{/wine/home}" style="font-size: 18px; font-weight: bold;">Back to Winery List</a>
+        <br/>
+    </div>
+    <div id="map"></div>
 </div>
-
-<br>
-<a th:href="@{/wine/home}">Back to Winery List</a>
-<br/>
-
-<div id="map" style="height: 400px;"></div>
 <script>
     // Set the winery address in a JavaScript variable
-    var wineryAddress = "[[${winery.address}]]" +" "+"[[${winery.city}]]"; // Assuming 'getAddress()' is the method in your Winery model
+    var wineryAddress = "[[${winery.address}]]" + " " + "[[${winery.city}]]"; // Assuming 'getAddress()' is the method in your Winery model
 
     // Check if Leaflet is defined before using it
     if (typeof L !== 'undefined') {
         // Use Nominatim to convert the address to latitude and longitude
         var geocoder = L.Control.Geocoder.nominatim();
 
-        // Initialize the map
-        var map = L.map('map').setView([0, 0], 13); // Initial view at (0, 0)
-
-        // Add the OpenStreetMap tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Add the search bar using leaflet-control-geocoder
-        var searchControl = L.Control.geocoder({
-            defaultMarkGeocode: false
-        }).on('markgeocode', function (e) {
-            var bbox = e.geocode.bbox;
-            var poly = L.polygon([
-                bbox.getSouthEast(),
-                bbox.getNorthEast(),
-                bbox.getNorthWest(),
-                bbox.getSouthWest()
-            ]).addTo(map);
-            map.fitBounds(poly.getBounds());
-        }).addTo(map);
-
         // Manually trigger geocoding for the initial winery address
         geocoder.geocode(wineryAddress, function (results) {
+            console.log(results); // Log geocoding results to console
             if (results.length > 0) {
                 var latLng = results[0].center;
+
+                // Initialize the map
+                var map = L.map('map').setView(latLng, 13); // Initial view at geocoded location
+
+                // Add the OpenStreetMap tile layer
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Add the search bar using leaflet-control-geocoder
+                var searchControl = L.Control.geocoder({
+                    defaultMarkGeocode: false
+                }).on('markgeocode', function (e) {
+                    var bbox = e.geocode.bbox;
+                    var poly = L.polygon([
+                        bbox.getSouthEast(),
+                        bbox.getNorthEast(),
+                        bbox.getNorthWest(),
+                        bbox.getSouthWest()
+                    ]).addTo(map);
+                    map.fitBounds(poly.getBounds());
+                }).addTo(map);
 
                 // Create a blue marker for the initial winery address
                 var marker = L.marker(latLng, { icon: L.divIcon({ className: 'leaflet-div-icon leaflet-div-icon-blue' }) })
                     .bindPopup('Winery Address: ' + wineryAddress)
                     .addTo(map);
-
-                // Set the view to the initial winery address
-                map.setView(latLng, 13);
             }
         });
     } else {

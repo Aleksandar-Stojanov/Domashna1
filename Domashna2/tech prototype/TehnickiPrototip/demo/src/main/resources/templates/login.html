@@ -3,27 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
+    <link rel="stylesheet" href="">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .container {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: auto;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: beige;
+            color: #333;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e0d9cc;
+        }
+
+        button:active {
+            background-color: #d9d2c4;
+        }
+    </style>
 </head>
 <body>
-<h2>Login</h2>
-<form action="/login" method="post">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-    </div>
-    <div>
-        <button type="submit">Login</button>
-    </div>
-    <div th:if="${error}">
-        <p style="color: red;">Invalid username or password</p>
-    </div>
-</form>
-<form action="/register" method="GET">
-    <button>Register here</button>
-</form>
+<div class="header">
+    <h1>Macedonian Winery Map</h1>
+</div>
+<div class="container">
+    <h2>Login</h2>
+    <form action="/login" method="post">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+        <div th:if="${error}">
+            <p style="color: red;">Invalid username or password</p>
+        </div>
+    </form>
+    <form action="/register" method="GET">
+        <button>Register here</button>
+    </form>
+</div>
 </body>
 </html>

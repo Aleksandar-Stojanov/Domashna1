@@ -1,11 +1,11 @@
 package com.example.demo.repository;
+
 import com.example.demo.model.Users_winery;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -23,5 +23,4 @@ public interface Users_winery_Repository extends JpaRepository<Users_winery, Lon
                   @Param("email") String email);
     Users_winery findByUsername(String username);
     Optional<Users_winery> findById(Long id);
-
 }
